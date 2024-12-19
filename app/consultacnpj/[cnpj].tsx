@@ -403,6 +403,7 @@ export default function ConsultaPdfCnpjScreen() {
         (<Button
           title="Mais Informações"
           onPress={handleMaisInfo}
+          color="#F9A825" // Cor amarela para o botão
         />)
         : ""}
 

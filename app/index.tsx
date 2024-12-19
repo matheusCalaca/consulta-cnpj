@@ -1,5 +1,4 @@
 import { Image, StyleSheet, Platform, View, Text, TextInput, Button } from 'react-native';
-
 import { HelloWave } from '@/components/HelloWave';
 import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { ThemedText } from '@/components/ThemedText';
@@ -7,19 +6,17 @@ import { ThemedView } from '@/components/ThemedView';
 import React from 'react';
 import { useRouter } from 'expo-router';
 
-
 export default function HomeScreen() {
-
   const [cnpj, setCnpj] = React.useState('18236120000158');
   const router = useRouter();
 
   const handleConsulta = () => {
     if (cnpj) {
-        router.push(`/consultacnpj/${cnpj}`);
+      router.push(`/consultacnpj/${cnpj}`);
     } else {
-        alert("Por favor, digite um CNPJ.");
+      alert("Por favor, digite um CNPJ.");
     }
-};
+  };
 
   return (
     <ParallaxScrollView
@@ -31,22 +28,24 @@ export default function HomeScreen() {
         />
       }>
       <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
+        <ThemedText type="title">Bem-vindo!</ThemedText>
         <HelloWave />
       </ThemedView>
 
-      <View>
-        <Text>Digite o CNPJ</Text>
+      <View style={styles.formContainer}>
+        <Text style={styles.label}>Digite o CNPJ</Text>
         <TextInput
           style={styles.input}
           value={cnpj}
           onChangeText={setCnpj}
           placeholder="Ex: 12345678000195"
-          keyboardType="numeric"></TextInput>
+          keyboardType="numeric"
+        />
         <Button
           title="Consultar"
           onPress={handleConsulta}
           disabled={!cnpj}
+          color="#F9A825" // Cor amarela para o botão
         />
       </View>
     </ParallaxScrollView>
@@ -58,10 +57,17 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 8,
+    marginBottom: 24,
   },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
+  formContainer: {
+    padding: 16,
+    backgroundColor: '#fff',
+    borderRadius: 8,
+    marginTop: 32,
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
+    shadowOffset: { width: 0, height: 4 },
+    shadowRadius: 8,
   },
   reactLogo: {
     height: 178,
@@ -70,7 +76,18 @@ const styles = StyleSheet.create({
     left: 0,
     position: 'absolute',
   },
-  container: { flex: 1, padding: 16, justifyContent: 'center' },
-  label: { fontSize: 18, marginBottom: 8 },
-  input: { borderWidth: 1, borderColor: '#ccc', padding: 8, marginBottom: 16, borderRadius: 4 },
+  label: {
+    fontSize: 18,
+    color: '#4A148C', // Cor roxa para o texto
+    marginBottom: 8,
+  },
+  input: {
+    borderWidth: 1,
+    borderColor: '#4A148C', // Cor roxa na borda
+    padding: 16,
+    marginBottom: 16,
+    borderRadius: 4,
+    fontSize: 16,
+    width: '100%',
+  },
 });
