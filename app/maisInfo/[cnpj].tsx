@@ -128,18 +128,24 @@ export default function MaisInfoCnpjScreen() {
   return (
     <ScrollView style={styles.container}>
       <View style={headercss(data.descricao_situacao_cadastral === 'ATIVA')}>
-        <Text><Text style={{ fontWeight: 'bold', }}>Razão Social:</Text> {data.razao_social}</Text>
-        <Text style={styles.headerText}><Text style={{ fontWeight: 'bold', }}>CNPJ:</Text> {data.cnpj}</Text>
-        <Text style={styles.headerText}><Text style={{ fontWeight: 'bold', }}>Situação:</Text> {data.descricao_situacao_cadastral}</Text>
+        <Text style={styles.headerText}>{data.razao_social}</Text>
+        <View style={{ margin: 5 }}></View>
+
+        <Text style={styles.headerText}><Text style={{ fontWeight: 'bold', color: '#000', }}>CNPJ:</Text> {data.cnpj}</Text>
+        <Text style={styles.headerText}><Text style={{ fontWeight: 'bold', color: '#000', }}>Situação:</Text> {data.descricao_situacao_cadastral}</Text>
       </View>
       <View style={styles.section}>
         <Text style={styles.title}>Informações Básicas</Text>
+        <View style={{ margin: 5 }}></View>
+
         <Text><Text style={{ fontWeight: 'bold', }}>Razão Social:</Text> {data.razao_social}</Text>
         <Text><Text style={{ fontWeight: 'bold', }}>Nome Fantasia:</Text> {data.nome_fantasia || '*****'}</Text>
         <Text><Text style={{ fontWeight: 'bold', }}>Natureza Jurídica:</Text> {data.natureza_juridica}</Text>
         <Text><Text style={{ fontWeight: 'bold', }}>Capital Social:</Text>  R$ {data.capital_social.toLocaleString()}</Text>
       </View>
       <View style={styles.section}>
+        <Text style={styles.title}>Endereço</Text>
+        <View style={{ margin: 5 }}></View>
         <Text><Text style={{ fontWeight: 'bold', }}>Logradouro:</Text> {data.logradouro}</Text>
         <Text><Text style={{ fontWeight: 'bold', }}>Número:</Text> {data.numero}</Text>
         <Text><Text style={{ fontWeight: 'bold', }}>Complemento:</Text> {data.complemento || '*****'}</Text>
@@ -150,6 +156,8 @@ export default function MaisInfoCnpjScreen() {
       </View>
       <View style={styles.section}>
         <Text style={styles.title}>Contato</Text>
+        <View style={{ margin: 5 }}></View>
+
         <Text><Text style={{ fontWeight: 'bold', }}>Telefone:</Text> {data.ddd_telefone_1}</Text>
         <Text><Text style={{ fontWeight: 'bold', }}>Fax:</Text> {data.ddd_fax}</Text>
         <Text><Text style={{ fontWeight: 'bold', }}>Email:</Text> {data.email || '*****'}</Text>
@@ -185,6 +193,9 @@ export default function MaisInfoCnpjScreen() {
           </View>
         ))}
       </View>
+      <View style={{ flex: 1, margin: 10, height: 50, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <Text>----------------------------------- </Text>
+      </View>
     </ScrollView>
   );
 }
@@ -219,5 +230,9 @@ const styles = StyleSheet.create({
   },
   socioContainer: {
     marginBottom: 10,
+    borderColor: '#000',
+    borderWidth: 1,
+    padding: 10,
+    borderRadius: 20,
   },
 });
