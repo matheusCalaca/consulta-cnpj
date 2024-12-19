@@ -55,15 +55,14 @@ export default function ConsultaCnpjScreen() {
     fetchData();
   }, [cnpj]);
 
-
   const handleConsulta = () => {
     if (cnpj) {
+      console.log(`../maisInfo/${cnpj}`);
       router.push(`../maisInfo/${cnpj}`);
     } else {
       alert("Por favor, digite um CNPJ.");
     }
   };
-
 
   if (loading) {
     return (
@@ -72,8 +71,6 @@ export default function ConsultaCnpjScreen() {
       </View>
     );
   }
-
-
 
   if (error) {
     return (
@@ -85,6 +82,11 @@ export default function ConsultaCnpjScreen() {
 
   return (
     <ScrollView style={styles.container}>
+      <Button
+        title="Consultar"
+        onPress={handleConsulta}
+        disabled={!cnpj}
+      />
       <Text style={styles.text}>CNPJ: {data?.cnpj}</Text>
       <Text style={styles.text}>Razão Social: {data?.razao_social}</Text>
       <Text style={styles.text}>Nome Fantasia: {data?.nome_fantasia || 'Não informado'}</Text>
@@ -104,11 +106,6 @@ export default function ConsultaCnpjScreen() {
           <Text style={styles.text}>Faixa Etária: {socio.faixa_etaria}</Text>
         </View>
       ))}
-      <Button
-        title="Consultar"
-        onPress={handleConsulta}
-        disabled={!cnpj}
-      />
     </ScrollView>
   );
 }

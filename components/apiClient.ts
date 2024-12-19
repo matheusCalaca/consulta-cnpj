@@ -5,7 +5,7 @@ class ApiClient {
 
   constructor() {
     this.api = axios.create({
-      baseURL: 'https://brasilapi.com.br/api/cnpj/v1',  // Defina a URL base para a API
+      baseURL: 'https://minhareceita.org/',  // Defina a URL base para a API
       headers: {
         'Content-Type': 'application/json',
       },
