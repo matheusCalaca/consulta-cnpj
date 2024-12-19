@@ -1,4 +1,4 @@
-import { StyleSheet, View, Text, Image, ScrollView, ActivityIndicator, Button } from 'react-native';
+import { StyleSheet, View, Text, Image, ScrollView, ActivityIndicator, Button, Dimensions } from 'react-native';
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useEffect, useState } from 'react';
 import apiClient from '../../components/apiClient';  // Importar o cliente de API
@@ -68,23 +68,29 @@ export default function MaisInfoCnpjScreen() {
     );
   }
 
+  const screenHeight = Dimensions.get('window').height;
+
+
   return (
-    <ScrollView contentContainerStyle={styles.container}>
+    <ScrollView contentContainerStyle={styles.container} style={{ height: screenHeight * 0.8 }}>
       <View style={styles.tableContainer}>
         {/* Cabeçalho */}
-        <View style={styles.headerContainer}>
-          <View style={{ width: 60, height: 60 }}>
-            <Image source={require('@/assets/images/brasao2.gif')} style={{ width: 60, height: 60 }} />
+        <View style={styles.tableRow}>
+          <View style={styles.tableCellBl110}>
+            <View style={{ width: 60, height: 60 }}>
+              <Image source={require('@/assets/images/brasao2.gif')} style={{ width: 60, height: 60 }} />
+            </View>
           </View>
+          <View style={{ flex: 0.05 }}></View>
 
-          <View style={styles.fillAvailable}>
+          <View style={styles.tableCellBl180}>
             <Text style={styles.headerText}>REPÚBLICA FEDERATIVA DO BRASIL</Text>
             <Text style={styles.subHeaderText}>CADASTRO NACIONAL DA PESSOA JURÍDICA</Text>
           </View>
         </View>
-
         {/* Tabela de Informações */}
 
+        <View style={{ height: 12 }}></View>
 
 
         {/* Linha 1 */}
@@ -362,6 +368,16 @@ const styles = StyleSheet.create({
     padding: 10,
     borderWidth: 1,
     borderColor: '#000',
+  },
+  tableCellBl110: {
+    flex: 0.1,
+    padding: 10,
+  },
+  tableCellBl180: {
+    flex: 0.8,
+    padding: 10,
+    display: 'flex',
+    justifyContent: 'space-between'
   },
   tableCellHalfBl750: {
     flex: 0.5,
