@@ -10,7 +10,7 @@ import { useRouter } from 'expo-router';
 
 export default function HomeScreen() {
 
-  const [cnpj, setCnpj] = React.useState('08561701000101');
+  const [cnpj, setCnpj] = React.useState('18236120000158');
   const router = useRouter();
 
   const handleConsulta = () => {
