@@ -133,7 +133,7 @@ export default function MaisInfoCnpjScreen() {
         <Text><Text style={styles.boldText}>Razão Social:</Text> {data.razao_social}</Text>
         <Text><Text style={styles.boldText}>Nome Fantasia:</Text> {data.nome_fantasia || '*****'}</Text>
         <Text><Text style={styles.boldText}>Natureza Jurídica:</Text> {data.natureza_juridica}</Text>
-        <Text><Text style={styles.boldText}>Capital Social:</Text>  R$ {data.capital_social.toLocaleString()}</Text>
+        <Text><Text style={styles.boldText}>Capital Social:</Text>  R$ {data.capital_social ? data.capital_social.toLocaleString() : "******"}</Text>
       </View>
       <View style={styles.section}>
         <Text><Text style={styles.boldText}>Logradouro:</Text> {data.logradouro}</Text>

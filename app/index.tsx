@@ -9,12 +9,14 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { TextInputMask } from 'react-native-masked-text';  // Importando a máscara
 
 export default function HomeScreen() {
-  const [cnpj, setCnpj] = useState('18236120000158');
+  //18236120000158
+  const [cnpj, setCnpj] = useState('');
   const router = useRouter();
 
   const handleConsulta = async () => {
     if (cnpj) {
       // Salva o CNPJ no histórico
+      setCnpj(cnpj.replace(/[^\d]+/g, ''));
       const currentDate = new Date().toLocaleString();
       const newHistoryItem = { cnpj, date: currentDate };
 
@@ -23,7 +25,7 @@ export default function HomeScreen() {
         let history = storedHistory ? JSON.parse(storedHistory) : [];
 
         // Verifica se o CNPJ já existe no histórico
-        const existingIndex = history.findIndex(item => item.cnpj === cnpj.replace(/[^\d]+/g, ''));
+        const existingIndex = history.findIndex(item => item.cnpj === cnpj);
 
         if (existingIndex > -1) {
           // Se o CNPJ já existe, atualiza a data
@@ -34,7 +36,7 @@ export default function HomeScreen() {
         }
 
         await AsyncStorage.setItem('cnpjHistory', JSON.stringify(history));
-        router.push(`/consultacnpj/${cnpj.replace(/[^\d]+/g, '')}`);
+        router.push(`/consultacnpj/${cnpj}`);
       } catch (error) {
         console.error('Erro ao salvar no histórico:', error);
       }
@@ -67,7 +69,7 @@ export default function HomeScreen() {
         <TextInputMask
           style={styles.input}
           type={'cnpj'}  // Aplica a máscara de CNPJ
-          value={cnpj.replace(/[^\d]+/g, '')}
+          value={cnpj}
           onChangeText={setCnpj}
           placeholder="Ex: 12.345.678/0001-95"
           keyboardType="numeric"

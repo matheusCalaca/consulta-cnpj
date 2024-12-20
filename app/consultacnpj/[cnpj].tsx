@@ -95,6 +95,7 @@ export default function ConsultaPdfCnpjScreen() {
         setLoading(false);
       } catch (err) {
         setError('Erro ao carregar os dados. Tente novamente mais tarde.');
+        Alert.alert(`flaha ao obter os dados ${err}`)
         setLoading(false);
       }
     };

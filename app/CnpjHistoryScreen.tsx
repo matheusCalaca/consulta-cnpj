@@ -26,9 +26,10 @@ export default function CnpjHistoryScreen() {
     const renderItem = ({ item }) => (
         <TouchableOpacity
             style={styles.historyItem}
-            onPress={() => { router.push(`/consultacnpj/${item.cnpj?.replace(/[^\d]+/g, '')}`); }}
+            onPress={() => { router.push(`/consultacnpj/${item.cnpj}`); }}
+            key={item.cnpj}
         >
-            <Text style={styles.cnpjText}>{DataFormatters.formatCNPJ(item.cnpj?.replace(/[^\d]+/g, ''))}</Text>
+            <Text style={styles.cnpjText}>{DataFormatters.formatCNPJ(item.cnpj)}</Text>
             <Text style={styles.dateText}>{item.date}</Text>
         </TouchableOpacity>
     );
