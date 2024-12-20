@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, Button, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useRouter } from 'expo-router';
+import { DataFormatters } from '@/components/DataFormatters ';
 
 export default function CnpjHistoryScreen() {
     const [cnpjHistory, setCnpjHistory] = useState([]);
@@ -27,7 +28,7 @@ export default function CnpjHistoryScreen() {
             style={styles.historyItem}
             onPress={() => { router.push(`/consultacnpj/${item.cnpj}`); }}
         >
-            <Text style={styles.cnpjText}>{item.cnpj}</Text>
+            <Text style={styles.cnpjText}>{DataFormatters.formatCNPJ(item.cnpj)}</Text>
             <Text style={styles.dateText}>{item.date}</Text>
         </TouchableOpacity>
     );

@@ -2,6 +2,7 @@ import { StyleSheet, View, Text, Image, ScrollView, ActivityIndicator, Button, D
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useEffect, useState } from 'react';
 import apiClient from '../../components/apiClient';  // Importar o cliente de API
+import { DataFormatters } from '@/components/DataFormatters ';
 
 export interface EmpresaDTO {
   uf: string;
@@ -119,79 +120,6 @@ export default function ConsultaPdfCnpjScreen() {
 
   const screenHeight = Dimensions.get('window').height;
 
-  function formatCNPJ(cnpj: string | null): string {
-    // Remove qualquer caractere que não seja número 
-    if (cnpj == null) { return "Falaha"; }
-
-    const cleaned = cnpj;
-    // Formata o CNPJ 
-    const formatted = cleaned.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})$/, '$1.$2.$3/$4-$5');
-    return formatted;
-  }
-
-  function formatDate(dateString: string | null): string {
-    if (dateString == null) { return "Falaha"; }
-
-    const date = new Date(dateString);
-    const day = String(date.getDate()).padStart(2, '0');
-    const month = String(date.getMonth() + 1).padStart(2, '0'); // Os meses são indexados a partir de 0
-    const year = date.getFullYear();
-
-    return `${day}/${month}/${year}`;
-  }
-
-  function formatCNAE(cnae: number | string): string {
-    // Converte o número para string, se necessário
-    const cnaeString = typeof cnae === 'number' ? cnae.toString() : cnae;
-
-    // Remove qualquer caractere que não seja número
-    const cleaned = cnaeString.replace(/\D/g, '');
-
-    // Formata o CNAE
-    const formatted = cleaned.replace(
-      /^(\d{2})(\d{2})(\d)(\d{1})(\d{2})$/,
-      '$1.$2-$3-$4$5'
-    );
-
-    return formatted;
-  }
-
-  function formatNaturezaJuridica(input: number | string): string {
-    // Converte o número para string, se necessário
-    const inputString = typeof input === 'number' ? input.toString() : input;
-
-    // Formata o número
-    const formatted = inputString.replace(/^(\d{3})(\d)$/, '$1-$2');
-
-    return formatted;
-  }
-
-  function formatCEP(cep: number | string): string {
-    // Converte o número para string, se necessário
-    const cepString = typeof cep === 'number' ? cep.toString() : cep;
-
-    // Remove qualquer caractere que não seja número
-    const cleaned = cepString.replace(/\D/g, '');
-
-    // Formata o CEP
-    const formatted = cleaned.replace(/^(\d{2})(\d{3})(\d{3})$/, '$1.$2-$3');
-
-    return formatted;
-  }
-
-  function formatPhoneNumber(phoneNumber: number | string): string {
-    // Converte o número para string, se necessário
-    const phoneString = typeof phoneNumber === 'number' ? phoneNumber.toString() : phoneNumber;
-
-    // Remove qualquer caractere que não seja número
-    const cleaned = phoneString.replace(/\D/g, '');
-
-    // Formata o número de telefone
-    const formatted = cleaned.replace(/^(\d{2})(\d{4})(\d{4})$/, '($1) $2-$3');
-
-    return formatted;
-  }
-
   const handleMaisInfo = () => {
     console.log(`../maisInfo/${data.cnpj}`);
     router.push(`../maisInfo/${data.cnpj}`);
@@ -223,7 +151,8 @@ export default function ConsultaPdfCnpjScreen() {
         <View style={styles.tableRow}>
           <View style={{ flex: 0.24, paddingLeft: 5, paddingBottom: 5, }}>
             <Text style={styles.label}>NÚMERO DE INSCRIÇÃO</Text>
-            <Text style={styles.value}>{formatCNPJ(data.cnpj)}</Text>
+            <Text style={styles.value}>{DataFormatters.formatCNPJ(data.cnpj)}</Text>
+            <View style={{ height: 1 }}></View>
             <Text style={styles.value}>{data?.descricao_identificador_matriz_filial}</Text>
           </View>
           <View style={{ flex: 0.5, paddingLeft: 5, paddingBottom: 5, borderRightWidth: 1, borderLeftWidth: 1 }}>
@@ -231,7 +160,7 @@ export default function ConsultaPdfCnpjScreen() {
           </View>
           <View style={{ flex: 0.24, paddingLeft: 5, paddingBottom: 5, }}>
             <Text style={styles.label}>DATA DE ABERTURA</Text>
-            <Text style={styles.value}>{formatDate(data.data_inicio_atividade)}</Text>
+            <Text style={styles.value}>{DataFormatters.formatDate(data.data_inicio_atividade)}</Text>
           </View>
         </View>
 
@@ -263,7 +192,7 @@ export default function ConsultaPdfCnpjScreen() {
         <View style={styles.tableRow}>
           <View style={styles.tableCellFull}>
             <Text style={styles.label}>CÓDIGO E DESCRIÇÃO DA ATIVIDADE ECONÔMICA PRINCIPAL</Text>
-            <Text style={styles.value}>{formatCNAE(data.cnae_fiscal)} - {data.cnae_fiscal_descricao}</Text>
+            <Text style={styles.value}>{DataFormatters.formatCNAE(data.cnae_fiscal)} - {data.cnae_fiscal_descricao}</Text>
           </View>
         </View>
         <View style={{ height: 12 }}></View>
@@ -274,9 +203,12 @@ export default function ConsultaPdfCnpjScreen() {
           <View style={styles.tableCellFull}>
             <Text style={styles.label}>CÓDIGO E DESCRIÇÃO DAS ATIVIDADES ECONÔMICAS SECUNDÁRIAS</Text>
             {data.cnaes_secundarios.map((cnae: CnaeSecundarioDTO) => (
-              <Text key={cnae.codigo} style={styles.value}>
-                {formatCNAE(cnae.codigo)} - {cnae.descricao}
-              </Text>
+              <>
+                <Text key={cnae.codigo} style={styles.value}>
+                  {DataFormatters.formatCNAE(cnae.codigo)} - {cnae.descricao}
+                </Text>
+                <View style={{ height: 2 }}></View>
+              </>
             ))}
           </View>
         </View>
@@ -286,7 +218,7 @@ export default function ConsultaPdfCnpjScreen() {
         <View style={styles.tableRow}>
           <View style={styles.tableCellFull}>
             <Text style={styles.label}>CÓDIGO E DESCRIÇÃO DA NATUREZA JURÍDICA</Text>
-            <Text style={styles.value}>{formatNaturezaJuridica(data.codigo_natureza_juridica)} - {data.natureza_juridica}</Text>
+            <Text style={styles.value}>{DataFormatters.formatNaturezaJuridica(data.codigo_natureza_juridica)} - {data.natureza_juridica}</Text>
           </View>
         </View>
         <View style={{ height: 12 }}></View>
@@ -314,7 +246,7 @@ export default function ConsultaPdfCnpjScreen() {
         <View style={styles.tableRowBlCustom}>
           <View style={styles.tableCellHalfBl818}>
             <Text style={styles.label}>CEP</Text>
-            <Text style={styles.value}>{formatCEP(data.cep)}</Text>
+            <Text style={styles.value}>{DataFormatters.formatCEP(data.cep)}</Text>
           </View>
           <View style={{ flex: 0.02 }}></View>
           <View style={styles.tableCellHalfBl830}>
@@ -345,7 +277,7 @@ export default function ConsultaPdfCnpjScreen() {
 
           <View style={styles.tableCellHalf}>
             <Text style={styles.label}>TELEFONE</Text>
-            <Text style={styles.value}>{formatPhoneNumber(data.ddd_telefone_1)}</Text>
+            <Text style={styles.value}>{DataFormatters.formatPhoneNumber(data.ddd_telefone_1)}</Text>
           </View>
         </View>
         <View style={{ height: 12 }}></View>
@@ -363,13 +295,13 @@ export default function ConsultaPdfCnpjScreen() {
         <View style={styles.tableRowBlCustom}>
           <View style={styles.tableCellHalfBl1164}>
             <Text style={styles.label}>SITUAÇÃO CADASTRAL</Text>
-            <Text style={styles.value}>{data.situacao_cadastral}</Text>
+            <Text style={styles.value}>{data.descricao_situacao_cadastral}</Text>
           </View>
           <View style={{ flex: 0.02 }}></View>
 
           <View style={styles.tableCellHalfBl1124}>
             <Text style={styles.label}>DATA DA SITUAÇÃO CADASTRAL</Text>
-            <Text style={styles.value}>{formatDate(data.data_situacao_cadastral)}</Text>
+            <Text style={styles.value}>{DataFormatters.formatDate(data.data_situacao_cadastral)}</Text>
           </View>
         </View>
 
@@ -378,7 +310,7 @@ export default function ConsultaPdfCnpjScreen() {
         <View style={styles.tableRow}>
           <View style={styles.tableCellFull}>
             <Text style={styles.label}>MOTIVO DE SITUAÇÃO CADASTRAL</Text>
-            <Text style={styles.value}>{data.motivo_situacao_cadastral}</Text>
+            <Text style={styles.value}>{data.descricao_motivo_situacao_cadastral}</Text>
           </View>
         </View>
         <View style={{ height: 12 }}></View>
@@ -393,7 +325,7 @@ export default function ConsultaPdfCnpjScreen() {
 
           <View style={styles.tableCellHalfBl1124}>
             <Text style={styles.label}>DATA DA SITUAÇÃO ESPECIAL</Text>
-            <Text style={styles.value}>{data.data_situacao_especial ? formatDate(data.data_situacao_especial) : "********"}</Text>
+            <Text style={styles.value}>{data.data_situacao_especial ? DataFormatters.formatDate(data.data_situacao_especial) : "********"}</Text>
           </View>
         </View>
 
@@ -415,7 +347,7 @@ export default function ConsultaPdfCnpjScreen() {
       <View style={styles.tableRow}>
         <View style={styles.tableCellFull}>
           <View style={{ height: 100 }}>
-           
+
           </View>
         </View>
       </View>
