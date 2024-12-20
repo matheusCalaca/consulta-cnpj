@@ -3,7 +3,6 @@ import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useEffect, useState } from 'react';
 import apiClient from '../../components/apiClient';  // Importar o cliente de API
 
-
 type Qsa = {
   pais: string | null;
   nome_socio: string;
@@ -77,20 +76,17 @@ type CNPJData = {
   descricao_identificador_matriz_filial: string;
 };
 
-
 export default function MaisInfoCnpjScreen() {
   const { cnpj } = useLocalSearchParams<{ cnpj: string }>();
   const [data, setData] = useState<any>('');
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
-
-
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response: CNPJData = await apiClient.getCNPJ(cnpj);  // Usando a classe ApiClient
-        console.log(response)
+        console.log(response);
         setData(response);
       } catch (err) {
         setError('Erro ao consultar o CNPJ');
@@ -102,20 +98,18 @@ export default function MaisInfoCnpjScreen() {
     fetchData();
   }, [cnpj]);
 
-
-
   if (loading) {
     return (
-      <View style={styles.container}>
-        <ActivityIndicator size="large" color="#0000ff" />
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color={styles.purpleDark.color} />
       </View>
     );
   }
 
   if (error) {
     return (
-      <View style={styles.container}>
-        <Text>{error}</Text>
+      <View style={styles.errorContainer}>
+        <Text style={styles.errorText}>{error}</Text>
       </View>
     );
   }
@@ -123,54 +117,46 @@ export default function MaisInfoCnpjScreen() {
   const headercss = (isActive: boolean) => ({
     backgroundColor: isActive ? 'green' : 'red',
     padding: 15,
+    borderRadius: 10,
+    marginBottom: 10,
   });
 
   return (
     <ScrollView style={styles.container}>
       <View style={headercss(data.descricao_situacao_cadastral === 'ATIVA')}>
-        <Text style={styles.headerText}>{data.razao_social}</Text>
-        <View style={{ margin: 5 }}></View>
-
-        <Text style={styles.headerText}><Text style={{ fontWeight: 'bold', color: '#000', }}>CNPJ:</Text> {data.cnpj}</Text>
-        <Text style={styles.headerText}><Text style={{ fontWeight: 'bold', color: '#000', }}>Situação:</Text> {data.descricao_situacao_cadastral}</Text>
+        <Text style={styles.headerText}><Text style={styles.boldText}>Razão Social:</Text> {data.razao_social}</Text>
+        <Text style={styles.headerText}><Text style={styles.boldText}>CNPJ:</Text> {data.cnpj}</Text>
+        <Text style={styles.headerText}><Text style={styles.boldText}>Situação:</Text> {data.descricao_situacao_cadastral}</Text>
       </View>
       <View style={styles.section}>
         <Text style={styles.title}>Informações Básicas</Text>
-        <View style={{ margin: 5 }}></View>
-
-        <Text><Text style={{ fontWeight: 'bold', }}>Razão Social:</Text> {data.razao_social}</Text>
-        <Text><Text style={{ fontWeight: 'bold', }}>Nome Fantasia:</Text> {data.nome_fantasia || '*****'}</Text>
-        <Text><Text style={{ fontWeight: 'bold', }}>Natureza Jurídica:</Text> {data.natureza_juridica}</Text>
-        <Text><Text style={{ fontWeight: 'bold', }}>Capital Social:</Text>  R$ {data.capital_social.toLocaleString()}</Text>
+        <Text><Text style={styles.boldText}>Razão Social:</Text> {data.razao_social}</Text>
+        <Text><Text style={styles.boldText}>Nome Fantasia:</Text> {data.nome_fantasia || '*****'}</Text>
+        <Text><Text style={styles.boldText}>Natureza Jurídica:</Text> {data.natureza_juridica}</Text>
+        <Text><Text style={styles.boldText}>Capital Social:</Text>  R$ {data.capital_social.toLocaleString()}</Text>
       </View>
       <View style={styles.section}>
-        <Text style={styles.title}>Endereço</Text>
-        <View style={{ margin: 5 }}></View>
-        <Text><Text style={{ fontWeight: 'bold', }}>Logradouro:</Text> {data.logradouro}</Text>
-        <Text><Text style={{ fontWeight: 'bold', }}>Número:</Text> {data.numero}</Text>
-        <Text><Text style={{ fontWeight: 'bold', }}>Complemento:</Text> {data.complemento || '*****'}</Text>
-        <Text><Text style={{ fontWeight: 'bold', }}>Bairro:</Text> {data.bairro}</Text>
-        <Text><Text style={{ fontWeight: 'bold', }}>Município:</Text> {data.municipio}</Text>
-        <Text><Text style={{ fontWeight: 'bold', }}>UF: </Text>{data.uf}</Text>
-        <Text><Text style={{ fontWeight: 'bold', }}>CEP:</Text> {data.cep}</Text>
+        <Text><Text style={styles.boldText}>Logradouro:</Text> {data.logradouro}</Text>
+        <Text><Text style={styles.boldText}>Número:</Text> {data.numero}</Text>
+        <Text><Text style={styles.boldText}>Complemento:</Text> {data.complemento || '*****'}</Text>
+        <Text><Text style={styles.boldText}>Bairro:</Text> {data.bairro}</Text>
+        <Text><Text style={styles.boldText}>Município:</Text> {data.municipio}</Text>
+        <Text><Text style={styles.boldText}>UF: </Text>{data.uf}</Text>
+        <Text><Text style={styles.boldText}>CEP:</Text> {data.cep}</Text>
       </View>
       <View style={styles.section}>
         <Text style={styles.title}>Contato</Text>
-        <View style={{ margin: 5 }}></View>
-
-        <Text><Text style={{ fontWeight: 'bold', }}>Telefone:</Text> {data.ddd_telefone_1}</Text>
-        <Text><Text style={{ fontWeight: 'bold', }}>Fax:</Text> {data.ddd_fax}</Text>
-        <Text><Text style={{ fontWeight: 'bold', }}>Email:</Text> {data.email || '*****'}</Text>
+        <Text><Text style={styles.boldText}>Telefone:</Text> {data.ddd_telefone_1}</Text>
+        <Text><Text style={styles.boldText}>Fax:</Text> {data.ddd_fax}</Text>
+        <Text><Text style={styles.boldText}>Email:</Text> {data.email || '*****'}</Text>
       </View>
       <View style={styles.section}>
         <Text style={styles.title}>Atividades</Text>
         <View style={{ margin: 5 }}></View>
-        <Text><Text style={{ fontWeight: 'bold', }}>Atividade Principal: </Text> {data.cnae_fiscal} - {data.cnae_fiscal_descricao}</Text>
-        <View style={{ flex: 1, margin: 10, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <Text>----------------------------------- </Text>
-        </View>
+        <Text><Text style={styles.boldText}>Atividade Principal: </Text> {data.cnae_fiscal} - {data.cnae_fiscal_descricao}</Text>
+        <View style={styles.divider}></View>
         {data.cnaes_secundarios.map((cnae: CnaeSecundario, index: number) => (
-          <Text key={index}><Text style={{ fontWeight: 'bold', }}>Secundária:</Text> {cnae.codigo} - {cnae.descricao}</Text>
+          <Text key={index}><Text style={styles.boldText}>Secundária:</Text> {cnae.codigo} - {cnae.descricao}</Text>
         ))}
       </View>
       <View style={styles.section}>
@@ -178,38 +164,53 @@ export default function MaisInfoCnpjScreen() {
         <View style={{ margin: 5 }}></View>
         {data.qsa.map((socio: Qsa, index: number) => (
           <View key={index} style={styles.socioContainer}>
-            <Text><Text style={{ fontWeight: 'bold' }}>Nome:</Text> {socio.nome_socio}</Text>
-            <Text><Text style={{ fontWeight: 'bold' }}>CPF/CNPJ:</Text> {socio.cnpj_cpf_do_socio || '*****'}</Text>
-            <Text><Text style={{ fontWeight: 'bold' }}>Qualificação:</Text> {socio.qualificacao_socio}</Text>
-            <Text><Text style={{ fontWeight: 'bold' }}>Faixa Etária:</Text> {socio.faixa_etaria}</Text>
-            <Text><Text style={{ fontWeight: 'bold' }}>Data de Entrada:</Text> {socio.data_entrada_sociedade}</Text>
-            <Text><Text style={{ fontWeight: 'bold' }}>País:</Text> {socio.pais || '*****'}</Text>
-            <Text><Text style={{ fontWeight: 'bold' }}>Código do País:</Text> {socio.codigo_pais || '*****'}</Text>
-            <Text><Text style={{ fontWeight: 'bold' }}>Identificador de Sócio:</Text> {socio.identificador_de_socio}</Text>
-            <Text><Text style={{ fontWeight: 'bold' }}>CPF Representante Legal:</Text> {socio.cpf_representante_legal || '*****'}</Text>
-            <Text><Text style={{ fontWeight: 'bold' }}>Nome Representante Legal:</Text> {socio.nome_representante_legal || '*****'}</Text>
-            <Text><Text style={{ fontWeight: 'bold' }}>Qualificação Representante Legal:</Text> {socio.qualificacao_representante_legal}</Text>
-            <Text><Text style={{ fontWeight: 'bold' }}>Código Qualificação Representante Legal:</Text> {socio.codigo_qualificacao_representante_legal}</Text>
+            <Text><Text style={styles.boldText}>Nome:</Text> {socio.nome_socio}</Text>
+            <Text><Text style={styles.boldText}>CPF/CNPJ:</Text> {socio.cnpj_cpf_do_socio || '*****'}</Text>
+            <Text><Text style={styles.boldText}>Qualificação:</Text> {socio.qualificacao_socio}</Text>
+            <Text><Text style={styles.boldText}>Faixa Etária:</Text> {socio.faixa_etaria}</Text>
+            <Text><Text style={styles.boldText}>Data de Entrada:</Text> {socio.data_entrada_sociedade}</Text>
+            <Text><Text style={styles.boldText}>País:</Text> {socio.pais || '*****'}</Text>
+            <Text><Text style={styles.boldText}>Código do País:</Text> {socio.codigo_pais || '*****'}</Text>
+            <Text><Text style={styles.boldText}>Identificador de Sócio:</Text> {socio.identificador_de_socio}</Text>
+            <Text><Text style={styles.boldText}>CPF Representante Legal:</Text> {socio.cpf_representante_legal || '*****'}</Text>
+            <Text><Text style={styles.boldText}>Nome Representante Legal:</Text> {socio.nome_representante_legal || '*****'}</Text>
+            <Text><Text style={styles.boldText}>Qualificação Representante Legal:</Text> {socio.qualificacao_representante_legal}</Text>
+            <Text><Text style={styles.boldText}>Código Qualificação Representante Legal:</Text> {socio.codigo_qualificacao_representante_legal}</Text>
           </View>
         ))}
-      </View>
-      <View style={{ flex: 1, margin: 10, height: 50, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-        <Text>----------------------------------- </Text>
       </View>
     </ScrollView>
   );
 }
-
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#F5F5F5',
   },
-
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#F5F5F5',
+  },
+  errorContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#F5F5F5',
+  },
+  errorText: {
+    fontSize: 16,
+    color: '#F44336',
+    fontWeight: 'bold',
+  },
   headerText: {
     color: '#FFF',
     fontSize: 18,
+    fontWeight: 'bold',
+  },
+  boldText: {
     fontWeight: 'bold',
   },
   section: {
@@ -224,15 +225,37 @@ const styles = StyleSheet.create({
     elevation: 3,
   },
   title: {
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: 'bold',
-    marginBottom: 5,
+    marginBottom: 10,
+    color: '#6200EE',
   },
   socioContainer: {
     marginBottom: 10,
-    borderColor: '#000',
-    borderWidth: 1,
     padding: 10,
-    borderRadius: 20,
+    backgroundColor: '#F9F9F9',
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#E0E0E0',
+  },
+  divider: {
+    height: 1,
+    backgroundColor: '#E0E0E0',
+    marginVertical: 10,
+  },
+  purpleDark: {
+    color: '#2A1A40',
+  },
+  purpleMiddle: {
+    color: '#8469BF',
+  },
+  purple: {
+    color: '#D0C2FD',
+  },
+  yellow: {
+    color: '#F2BE22',
+  },
+  yellowMiddle: {
+    color: '#F2D47A',
   },
 });

@@ -1,5 +1,5 @@
 import type { PropsWithChildren, ReactElement } from 'react';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import Animated, {
   interpolate,
   useAnimatedRef,
@@ -58,8 +58,13 @@ export default function ParallaxScrollView({
             headerAnimatedStyle,
           ]}>
           {headerImage}
+          <View style={styles.centeredTextContainer}>
+            <Text style={styles.centeredText}>Consulta CNPJ</Text>
+          </View>
         </Animated.View>
-        <ThemedView style={styles.content}>{children}</ThemedView>
+        <ThemedView style={styles.content}>
+          {children}
+        </ThemedView>
       </Animated.ScrollView>
     </ThemedView>
   );
@@ -78,5 +83,17 @@ const styles = StyleSheet.create({
     padding: 32,
     gap: 16,
     overflow: 'hidden',
+  },
+  centeredTextContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: 200, // Ajuste a altura conforme necessário
+  },
+  centeredText: {
+    fontSize: 48, // Aumentando o tamanho do texto
+    fontWeight: '900', // Tornando o texto mais grosso
+    color: '#fff', 
+    textAlign: 'center',
   },
 });
