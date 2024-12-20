@@ -1,4 +1,4 @@
-import { Image, StyleSheet, View, Text, TextInput, Button } from 'react-native';
+import { Image, StyleSheet, View, Text, Button } from 'react-native';
 import { HelloWave } from '@/components/HelloWave';
 import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { ThemedText } from '@/components/ThemedText';
@@ -6,6 +6,7 @@ import { ThemedView } from '@/components/ThemedView';
 import React, { useState } from 'react';
 import { useRouter } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { TextInputMask } from 'react-native-masked-text';  // Importando a máscara
 
 export default function HomeScreen() {
   const [cnpj, setCnpj] = useState('18236120000158');
@@ -22,7 +23,7 @@ export default function HomeScreen() {
         let history = storedHistory ? JSON.parse(storedHistory) : [];
 
         // Verifica se o CNPJ já existe no histórico
-        const existingIndex = history.findIndex(item => item.cnpj === cnpj);
+        const existingIndex = history.findIndex(item => item.cnpj === cnpj.replace(/[^\d]+/g, ''));
 
         if (existingIndex > -1) {
           // Se o CNPJ já existe, atualiza a data
@@ -33,7 +34,7 @@ export default function HomeScreen() {
         }
 
         await AsyncStorage.setItem('cnpjHistory', JSON.stringify(history));
-        router.push(`/consultacnpj/${cnpj}`);
+        router.push(`/consultacnpj/${cnpj.replace(/[^\d]+/g, '')}`);
       } catch (error) {
         console.error('Erro ao salvar no histórico:', error);
       }
@@ -63,11 +64,12 @@ export default function HomeScreen() {
 
       <View style={styles.formContainer}>
         <Text style={styles.label}>Digite o CNPJ</Text>
-        <TextInput
+        <TextInputMask
           style={styles.input}
-          value={cnpj}
+          type={'cnpj'}  // Aplica a máscara de CNPJ
+          value={cnpj.replace(/[^\d]+/g, '')}
           onChangeText={setCnpj}
-          placeholder="Ex: 12345678000195"
+          placeholder="Ex: 12.345.678/0001-95"
           keyboardType="numeric"
         />
         <Button
