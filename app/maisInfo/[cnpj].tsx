@@ -125,6 +125,7 @@ export default function MaisInfoCnpjScreen() {
     <ScrollView style={styles.container}>
       <View style={headercss(data.descricao_situacao_cadastral === 'ATIVA')}>
         <Text style={styles.headerText}><Text style={styles.boldText}>Razão Social:</Text> {data.razao_social}</Text>
+        <Text style={styles.headerText}><Text style={styles.boldText}>Nome Fantasia:</Text> {data.nome_fantasia}</Text>
         <Text style={styles.headerText}><Text style={styles.boldText}>CNPJ:</Text> {data.cnpj}</Text>
         <Text style={styles.headerText}><Text style={styles.boldText}>Situação:</Text> {data.descricao_situacao_cadastral}</Text>
       </View>

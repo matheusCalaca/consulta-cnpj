@@ -204,12 +204,12 @@ export default function ConsultaPdfCnpjScreen() {
           <View style={styles.tableCellFull}>
             <Text style={styles.label}>CÓDIGO E DESCRIÇÃO DAS ATIVIDADES ECONÔMICAS SECUNDÁRIAS</Text>
             {data.cnaes_secundarios.map((cnae: CnaeSecundarioDTO) => (
-              <>
+              <React.Fragment key={cnae.codigo}>
                 <Text key={cnae.codigo} style={styles.value}>
                   {DataFormatters.formatCNAE(cnae.codigo)} - {cnae.descricao}
                 </Text>
                 <View style={{ height: 2 }}></View>
-              </>
+              </React.Fragment>
             ))}
           </View>
         </View>

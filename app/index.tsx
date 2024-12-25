@@ -7,43 +7,69 @@ import React, { useState } from 'react';
 import { useRouter } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { TextInputMask } from 'react-native-masked-text';  // Importando a máscara
+import { CnpjHistoryDTO } from '@/domain/cnpjHitory';
 
 export default function HomeScreen() {
   //18236120000158
   const [cnpj, setCnpj] = useState('');
   const router = useRouter();
-
   const handleConsulta = async () => {
+    console.log('Iniciando handleConsulta'); // Log inicial
+
     if (cnpj) {
-      // Salva o CNPJ no histórico
-      setCnpj(cnpj.replace(/[^\d]+/g, ''));
-      const currentDate = new Date().toLocaleString();
-      const newHistoryItem = { cnpj, date: currentDate };
+        console.log('CNPJ fornecido:', cnpj); // Verifica se o CNPJ foi fornecido
+        // Remove caracteres não numéricos do CNPJ
+        const sanitizedCNPJ = cnpj.replace(/[^\d]+/g, '');
+        console.log('CNPJ sanitizado:', sanitizedCNPJ);
 
-      try {
-        const storedHistory = await AsyncStorage.getItem('cnpjHistory');
-        let history = storedHistory ? JSON.parse(storedHistory) : [];
+        setCnpj(sanitizedCNPJ);
 
-        // Verifica se o CNPJ já existe no histórico
-        const existingIndex = history.findIndex(item => item.cnpj === cnpj);
+        const currentDate = new Date().toLocaleString();
+        console.log('Data atual:', currentDate);
 
-        if (existingIndex > -1) {
-          // Se o CNPJ já existe, atualiza a data
-          history[existingIndex].date = currentDate;
-        } else {
-          // Caso contrário, adiciona um novo item
-          history = [newHistoryItem, ...history].slice(0, 20); // Limita a 20 itens
+        const newHistoryItem: CnpjHistoryDTO = { cnpj: sanitizedCNPJ, date: currentDate };
+        console.log('Novo item de histórico criado:', newHistoryItem);
+
+        try {
+            // Obtém o histórico armazenado
+            console.log('Tentando obter o histórico do AsyncStorage...');
+            const storedHistory = await AsyncStorage.getItem('cnpjHistory');
+            let history: CnpjHistoryDTO[] = storedHistory ? JSON.parse(storedHistory) : [];
+            console.log('Histórico recuperado:', history);
+
+            // Verifica se o CNPJ já existe no histórico
+            const existingIndex = history.findIndex(item => item.cnpj === sanitizedCNPJ);
+            console.log('Índice do CNPJ existente:', existingIndex);
+
+            if (existingIndex > -1) {
+                // Se o CNPJ já existe, atualiza a data
+                console.log('CNPJ já existe no histórico. Atualizando data...');
+                history[existingIndex].date = currentDate;
+            } else {
+                // Caso contrário, adiciona um novo item
+                console.log('CNPJ não encontrado no histórico. Adicionando novo item...');
+                history = [newHistoryItem, ...history].slice(0, 20); // Limita a 20 itens
+                console.log('Histórico atualizado (com limite de 20):', history);
+            }
+
+            // Salva o histórico atualizado
+            console.log('Salvando histórico atualizado no AsyncStorage...');
+            await AsyncStorage.setItem('cnpjHistory', JSON.stringify(history));
+            console.log('Histórico salvo com sucesso.');
+
+            // Navega para a tela de consulta
+            console.log('Redirecionando para a tela de consulta do CNPJ:', sanitizedCNPJ);
+            router.push(`/consultacnpj/${sanitizedCNPJ}`);
+        } catch (error) {
+            console.error('Erro ao salvar no histórico:', error);
         }
-
-        await AsyncStorage.setItem('cnpjHistory', JSON.stringify(history));
-        router.push(`/consultacnpj/${cnpj}`);
-      } catch (error) {
-        console.error('Erro ao salvar no histórico:', error);
-      }
     } else {
-      alert('Por favor, digite um CNPJ.');
+        console.warn('Nenhum CNPJ fornecido. Mostrando alerta para o usuário.');
+        alert('Por favor, digite um CNPJ.');
     }
-  };
+
+    console.log('Finalizando handleConsulta'); // Log final
+};
 
   const handleGoToHistory = () => {
     router.push('/CnpjHistoryScreen');
@@ -73,6 +99,7 @@ export default function HomeScreen() {
           onChangeText={setCnpj}
           placeholder="Ex: 12.345.678/0001-95"
           keyboardType="numeric"
+          returnKeyType="done" // Ajusta o botão do teclado para "OK"
         />
         <Button
           title="Consultar"
@@ -96,13 +123,13 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 8,
-    marginBottom: 24,
+    marginBottom: 10,
   },
   formContainer: {
     padding: 16,
     backgroundColor: '#fff',
     borderRadius: 8,
-    marginTop: 32,
+    marginTop: 10,
     shadowColor: '#000',
     shadowOpacity: 0.1,
     shadowOffset: { width: 0, height: 4 },
